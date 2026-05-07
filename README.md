@@ -49,8 +49,54 @@ TCX2003/
 │   ├── Q3/
 │   └── Q4/
 ├── project/            # Deliverables, schema designs, SQL scripts, demo prep
-└── resources/          # Course overview, assessment rules, helpful links
+├── resources/          # Course overview, assessment rules, helpful links
+└── sql-practice/       # Local Postgres sandbox via Docker
+    ├── docker-compose.yml
+    └── init/           # SQL files auto-loaded on first container start
+        └── 01_seed.sql
 ```
+
+---
+
+## SQL Practice Environment
+
+A local PostgreSQL 16 sandbox lives in [sql-practice/](sql-practice/). It runs in Docker and auto-loads every `.sql` file under `init/` on first start.
+
+**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+
+### Start the database
+
+```bash
+cd sql-practice
+docker compose up -d
+```
+
+### Connect with psql
+
+```bash
+docker exec -it sql-practice-db-1 psql -U student -d practice
+```
+
+Or from any local psql client:
+
+```
+Host:     localhost
+Port:     5432
+User:     student
+Password: password
+Database: practice
+```
+
+### Stop the container
+
+```bash
+docker compose down          # stops and removes the container (data is preserved)
+docker compose down -v       # also wipes the volume — full reset to seed data
+```
+
+### Add more practice scripts
+
+Drop a new `.sql` file into `init/` (e.g. `02_queries.sql`). It will be picked up automatically on the next fresh start (`docker compose down -v && docker compose up -d`).
 
 ---
 
